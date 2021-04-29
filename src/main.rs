@@ -1,3 +1,7 @@
+mod errors;
+
+use errors::*;
+
 use clap::Clap;
 
 #[derive(Clap)]
@@ -12,6 +16,8 @@ struct Opt {
     url: String,
 }
 
-fn main() {
+fn main() -> Result {
     let opt = Opt::parse();
+
+    Ok(())
 }

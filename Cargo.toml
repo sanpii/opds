@@ -7,3 +7,4 @@ license = "MIT"
 
 [dependencies]
 clap = "3.0.0-beta.2"
+thiserror = "1.0"
