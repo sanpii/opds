@@ -7,4 +7,6 @@ license = "MIT"
 
 [dependencies]
 clap = "3.0.0-beta.2"
+termion = "1.5"
 thiserror = "1.0"
+tui = "0.15"
