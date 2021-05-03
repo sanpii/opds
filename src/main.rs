@@ -1,9 +1,11 @@
 mod errors;
 mod events;
+mod list;
 mod opds;
 
 use errors::*;
 use events::*;
+use list::*;
 use opds::*;
 
 use clap::Clap;
@@ -22,14 +24,14 @@ struct Opt {
 
 struct State {
     path: String,
-    feed: Option<atom_syndication::Feed>,
+    list: List,
 }
 
 impl State {
     fn new() -> Self {
         Self {
             path: "/".to_string(),
-            feed: None,
+            list: List::new(),
         }
     }
 }
@@ -50,7 +52,7 @@ fn main() -> Result {
 
     loop {
         if let Some(feed) = opds.next() {
-            state.feed = Some(feed);
+            state.list = List::from(feed);
         }
 
         terminal.draw(|f| {
@@ -70,35 +72,31 @@ fn main() -> Result {
                 .block(block);
             f.render_widget(url, layout[0]);
 
-            if let Some(feed) = &state.feed {
-                let block = tui::widgets::Block::default()
-                    .border_type(tui::widgets::BorderType::Rounded)
-                    .borders(tui::widgets::Borders::ALL);
-                let mut entries = feed.entries.iter()
-                    .map(|x| x.title.clone())
-                    .collect::<Vec<_>>();
-                entries.sort_by(|a, b| a.to_lowercase().cmp(&b.to_lowercase()));
-                let items = entries.iter()
-                    .map(|x| tui::widgets::ListItem::new(x.as_str()))
-                    .collect::<Vec<_>>();
-                let list = tui::widgets::List::new(items)
-                    .block(block)
-                    .highlight_style(
-                        tui::style::Style::default()
-                            .bg(tui::style::Color::LightGreen)
-                            .add_modifier(tui::style::Modifier::BOLD),
-                    )
-                    .highlight_symbol(">");
-                f.render_widget(list, layout[1]);
-            }
+            let block = tui::widgets::Block::default()
+                .border_type(tui::widgets::BorderType::Rounded)
+                .borders(tui::widgets::Borders::ALL);
+            let items = state.list.items.iter()
+                .map(|x| tui::widgets::ListItem::new(x.as_str()))
+                .collect::<Vec<_>>();
+            let widgets = tui::widgets::List::new(items)
+                .block(block)
+                .highlight_style(
+                    tui::style::Style::default()
+                        .add_modifier(tui::style::Modifier::BOLD),
+                )
+                .highlight_symbol("> ");
+            f.render_stateful_widget(widgets, layout[1], &mut state.list.state);
         })?;
 
         if let Ok(key) = events.next() {
+            use termion::event::Key::*;
+
             match key {
-                termion::event::Key::Char('q') => {
-                    break;
-                }
-                _ => {}
+                Char('q') => break,
+                Left => state.list.unselect(),
+                Down => state.list.next(),
+                Up => state.list.previous(),
+                _ => (),
             }
         };
     }
