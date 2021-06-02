@@ -6,4 +6,6 @@ pub enum Error {
     Io(#[from] std::io::Error),
     #[error("{0}")]
     Http(#[from] attohttpc::Error),
+    #[error("{0}")]
+    Logger(#[from] log::SetLoggerError),
 }

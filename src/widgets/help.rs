@@ -8,6 +8,7 @@ impl<'a> super::Widget<'a, tui::widgets::Table<'a>> for Help {
             .title("Help");
 
         tui::widgets::Table::new(vec![
+            tui::widgets::Row::new(vec!["d", "Show logs"]),
             tui::widgets::Row::new(vec!["q", "Quit"]),
             tui::widgets::Row::new(vec!["h", "Show this help"]),
         ])

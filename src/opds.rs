@@ -5,6 +5,8 @@ pub struct Opds {
 
 impl Opds {
     pub fn new(url: &str) -> Self {
+        log::debug!("{}", url);
+
         Self {
             rx: None,
             url: url.to_string(),
@@ -15,7 +17,9 @@ impl Opds {
         self.send("/");
     }
 
-    fn send(&mut self, path: &str) {
+    pub fn send(&mut self, path: &str) {
+        log::debug!("Fetching {}", path);
+
         let (tx, rx) = std::sync::mpsc::channel();
         let url = format!("{}/{}", self.url, path);
 
