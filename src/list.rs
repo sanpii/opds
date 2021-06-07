@@ -1,6 +1,39 @@
+#[derive(Debug, PartialOrd, Ord, PartialEq, Eq)]
+pub struct Item {
+    pub title: String,
+    pub link: String,
+}
+
+impl std::convert::TryFrom<&atom_syndication::Entry> for Item {
+    type Error = ();
+
+    fn try_from(entry: &atom_syndication::Entry) -> Result<Self, Self::Error> {
+        let mut link = None;
+
+        for l in &entry.links {
+            if l.rel == "subsection" {
+                link = Some(l.href.clone());
+                break;
+            }
+        }
+
+        if let Some(link) = link {
+            let item = Self {
+                title: entry.title.to_string(),
+                link,
+            };
+
+            Ok(item)
+        } else {
+            Err(())
+        }
+    }
+
+}
+
 pub struct List {
     pub state: tui::widgets::ListState,
-    pub items: Vec<String>,
+    pub items: Vec<Item>,
 }
 
 impl List {
@@ -42,14 +75,21 @@ impl List {
     pub fn unselect(&mut self) {
         self.state.select(None);
     }
+
+    pub fn selected(&self) -> Option<&Item> {
+        self.state.selected()
+            .map(|x| &self.items[x])
+    }
 }
 
 impl From<atom_syndication::Feed> for List {
     fn from(feed: atom_syndication::Feed) -> Self {
+        use std::convert::TryFrom;
+
         let mut items = feed.entries.iter()
-            .map(|x| x.title.clone())
+            .filter_map(|x| Item::try_from(x).ok())
             .collect::<Vec<_>>();
-        items.sort_by(|a, b| a.to_lowercase().cmp(&b.to_lowercase()));
+        items.sort();
 
         Self {
             items,
