@@ -110,7 +110,7 @@ fn main() -> Result {
                 .border_type(tui::widgets::BorderType::Rounded)
                 .borders(tui::widgets::Borders::ALL);
             let items = state.list.items.iter()
-                .map(|x| tui::widgets::ListItem::new(x.title.as_str()))
+                .map(tui::widgets::ListItem::new)
                 .collect::<Vec<_>>();
             let widgets = tui::widgets::List::new(items)
                 .block(block)
@@ -140,7 +140,7 @@ fn main() -> Result {
                 Char('h') => state.show_help = !state.show_help,
                 Char('q') => break,
                 Char('\n') => if let Some(item) = state.list.selected() {
-                    opds.send(&item.link);
+                    opds.send(&item.link());
                 }
                 Esc => state.list.unselect(),
                 Down => state.list.next(),

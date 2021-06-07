@@ -1,34 +1,82 @@
-#[derive(Debug, PartialOrd, Ord, PartialEq, Eq)]
-pub struct Item {
-    pub title: String,
-    pub link: String,
+#[derive(Debug, PartialEq, Eq, Ord)]
+pub enum Item {
+    Book(Book),
+    Subsection(Subsection),
+}
+
+impl Item {
+    pub fn link(&self) -> &str {
+        match self {
+            Self::Book(book) => &book.link,
+            Self::Subsection(subsection) => &subsection.link,
+        }
+    }
+}
+
+impl PartialOrd for Item {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        match (self, other) {
+            (Self::Book(_), Self::Subsection(_)) => Some(std::cmp::Ordering::Less),
+            (Self::Book(a), Self::Book(b)) => a.partial_cmp(b),
+            (Self::Subsection(_), Self::Book(_)) => Some(std::cmp::Ordering::Greater),
+            (Self::Subsection(a), Self::Subsection(b)) => a.partial_cmp(b),
+        }
+    }
 }
 
 impl std::convert::TryFrom<&atom_syndication::Entry> for Item {
     type Error = ();
 
     fn try_from(entry: &atom_syndication::Entry) -> Result<Self, Self::Error> {
-        let mut link = None;
+        let mut item = None;
 
         for l in &entry.links {
             if l.rel == "subsection" {
-                link = Some(l.href.clone());
+                let subsection = Subsection {
+                    link: l.href.clone(),
+                    title: entry.title.to_string(),
+                };
+
+                item = Some(Self::Subsection(subsection));
                 break;
+            } else {
+                let book = Book {
+                    link: l.href.clone(),
+                    title: entry.title.to_string(),
+                };
+
+                item = Some(Self::Book(book));
             }
         }
 
-        if let Some(link) = link {
-            let item = Self {
-                title: entry.title.to_string(),
-                link,
-            };
-
+        if let Some(item) = item {
             Ok(item)
         } else {
             Err(())
         }
     }
 
+}
+
+impl<'a> From<&'a Item> for tui::text::Text<'a> {
+    fn from(item: &'a Item) -> Self {
+        match item {
+            Item::Book(book) => format!("📕 {}", book.title).into(),
+            Item::Subsection(subsection) => format!("📚 {}", subsection.title).into(),
+        }
+    }
+}
+
+#[derive(Debug, PartialOrd, Ord, PartialEq, Eq)]
+pub struct Book {
+    pub title: String,
+    pub link: String,
+}
+
+#[derive(Debug, PartialOrd, Ord, PartialEq, Eq)]
+pub struct Subsection {
+    pub title: String,
+    pub link: String,
 }
 
 pub struct List {
