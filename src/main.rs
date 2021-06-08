@@ -30,6 +30,7 @@ pub struct State {
     show_help: bool,
     path: String,
     list: List,
+    book: Option<usize>,
     logs: Vec<logger::Message>,
 }
 
@@ -40,6 +41,7 @@ impl State {
             show_help: false,
             path: "/".to_string(),
             list: List::new(),
+            book: None,
             logs: Vec::new(),
         }
     }
@@ -94,6 +96,9 @@ fn main() -> Result {
             if state.show_debug {
                 npanes += 1;
             }
+            if state.book.is_some() {
+                npanes += 1;
+            }
             if state.show_help {
                 npanes += 1;
             }
@@ -122,6 +127,11 @@ fn main() -> Result {
             f.render_stateful_widget(widgets, main[area], &mut state.list.state);
             area += 1;
 
+            if state.book.is_some() {
+                f.render_widget(widgets::Details::draw(&state), main[area]);
+                area += 1;
+            }
+
             if state.show_debug {
                 f.render_widget(widgets::Logs::draw(&state), main[area]);
                 area += 1;
@@ -140,11 +150,20 @@ fn main() -> Result {
                 Char('h') => state.show_help = !state.show_help,
                 Char('q') => break,
                 Char('\n') => if let Some(item) = state.list.selected() {
-                    opds.send(&item.link());
+                    match item {
+                        Item::Subsection(subsection) => opds.send(&subsection.link),
+                        Item::Book(_) => state.book = state.list.nth(),
+                    }
                 }
                 Esc => state.list.unselect(),
-                Down => state.list.next(),
-                Up => state.list.previous(),
+                Down => {
+                    state.book = None;
+                    state.list.next();
+                }
+                Up => {
+                    state.book = None;
+                    state.list.previous();
+                }
                 _ => (),
             }
         };

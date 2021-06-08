@@ -1,6 +1,8 @@
+mod details;
 mod help;
 mod logs;
 
+pub use details::Details;
 pub use help::Help;
 pub use logs::Logs;
 
