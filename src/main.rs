@@ -182,6 +182,14 @@ fn main() -> Result {
                     state.book = None;
                     state.list.previous();
                 }
+                PageDown => {
+                    state.book = None;
+                    state.list.inc(10);
+                }
+                PageUp => {
+                    state.book = None;
+                    state.list.dec(10);
+                }
                 _ => (),
             }
         };

@@ -51,6 +51,18 @@ impl List {
         self.state.select(Some(i));
     }
 
+    pub fn inc(&mut self, nth: usize) {
+        let selected = self.state.selected().unwrap_or(nth);
+        let i = (selected + nth).min(self.items.len() - 1);
+        self.state.select(Some(i));
+    }
+
+    pub fn dec(&mut self, nth: usize) {
+        let selected = self.state.selected().unwrap_or(0);
+        let i = selected.checked_sub(nth).unwrap_or(0);
+        self.state.select(Some(i));
+    }
+
     pub fn unselect(&mut self) {
         self.state.select(None);
     }
