@@ -50,7 +50,8 @@ impl Opds {
     }
 
     fn try_send(url: &str, username: Option<&str>, password: Option<&str>) -> crate::Result<atom_syndication::Feed> {
-        let mut request = attohttpc::get(url);
+        let mut request = attohttpc::get(url)
+            .proxy_settings(attohttpc::ProxySettings::from_env());
         request = if let Some(username) = username {
             request.basic_auth(username, password)
         } else {
