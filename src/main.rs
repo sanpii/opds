@@ -58,7 +58,7 @@ fn main() -> Result {
     log::set_logger(&*LOGGER).unwrap();
 
     let opt = Opt::parse();
-    let mut opds = Opds::new(&opt.url);
+    let mut opds = Opds::new(&opt.url, opt.username, opt.password);
     opds.root();
     let mut state = State::new();
     state.ariane.push(Subsection {
