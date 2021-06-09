@@ -14,7 +14,11 @@ impl Opds {
     }
 
     pub fn root(&mut self) {
-        self.send(&self.url.path().to_string());
+        self.send(&self.root_url());
+    }
+
+    pub fn root_url(&self) -> String {
+        self.url.path().to_string()
     }
 
     pub fn send(&mut self, path: &str) {

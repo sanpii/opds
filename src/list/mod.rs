@@ -4,7 +4,7 @@ mod item;
 pub use book::Book;
 pub use item::Item;
 
-#[derive(Debug, PartialOrd, Ord, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialOrd, Ord, PartialEq, Eq)]
 pub struct Subsection {
     pub title: String,
     pub link: String,

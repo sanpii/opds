@@ -26,9 +26,9 @@ struct Opt {
 }
 
 pub struct State {
+    ariane: Vec<Subsection>,
     show_debug: bool,
     show_help: bool,
-    path: String,
     list: List,
     book: Option<usize>,
     logs: Vec<logger::Message>,
@@ -37,9 +37,9 @@ pub struct State {
 impl State {
     fn new() -> Self {
         Self {
+            ariane: vec![],
             show_debug: cfg!(debug_assertions),
             show_help: false,
-            path: "/".to_string(),
             list: List::new(),
             book: None,
             logs: Vec::new(),
@@ -58,9 +58,13 @@ fn main() -> Result {
     log::set_logger(&*LOGGER).unwrap();
 
     let opt = Opt::parse();
-    let mut state = State::new();
     let mut opds = Opds::new(&opt.url);
     opds.root();
+    let mut state = State::new();
+    state.ariane.push(Subsection {
+        title: "#".to_string(),
+        link: opds.root_url(),
+    });
 
     let events = Events::new();
     let stdout = std::io::stdout().into_raw_mode()?;
@@ -71,6 +75,11 @@ fn main() -> Result {
     loop {
         if let Some(feed) = opds.next() {
             state.list = List::from(feed);
+
+            if state.ariane.len() >= 2 {
+                let prev = &state.ariane[state.ariane.len() - 2];
+                state.list.items.insert(0, list::Item::Previous(prev.link.clone()));
+            }
         }
 
         state.logs = LOGGER.messages();
@@ -88,7 +97,7 @@ fn main() -> Result {
             let block = tui::widgets::Block::default()
                 .border_type(tui::widgets::BorderType::Rounded)
                 .borders(tui::widgets::Borders::ALL);
-            let url = tui::widgets::Paragraph::new(state.path.clone())
+            let url = tui::widgets::Paragraph::new(state.ariane.iter().map(|x| x.title.clone()).collect::<Vec<_>>().join("/"))
                 .block(block);
             f.render_widget(url, layout[0]);
 
@@ -114,9 +123,11 @@ fn main() -> Result {
             let block = tui::widgets::Block::default()
                 .border_type(tui::widgets::BorderType::Rounded)
                 .borders(tui::widgets::Borders::ALL);
+
             let items = state.list.items.iter()
                 .map(tui::widgets::ListItem::new)
                 .collect::<Vec<_>>();
+
             let widgets = tui::widgets::List::new(items)
                 .block(block)
                 .highlight_style(
@@ -151,8 +162,15 @@ fn main() -> Result {
                 Char('q') => break,
                 Char('\n') => if let Some(item) = state.list.selected() {
                     match item {
-                        Item::Subsection(subsection) => opds.send(&subsection.link),
                         Item::Book(_) => state.book = state.list.nth(),
+                        Item::Previous(link) => {
+                            state.ariane.pop();
+                            opds.send(&link);
+                        }
+                        Item::Subsection(subsection) => {
+                            state.ariane.push(subsection.clone());
+                            opds.send(&subsection.link);
+                        }
                     }
                 }
                 Esc => state.list.unselect(),
