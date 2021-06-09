@@ -30,7 +30,8 @@ impl Eq for Item {
 impl From<&atom_syndication::Entry> for Item {
     fn from(entry: &atom_syndication::Entry) -> Self {
         for l in &entry.links {
-            if l.rel == "subsection" {
+            let kind = l.mime_type.clone().map(Type::from).map(|x| x.kind).flatten();
+            if kind == Some(Kind::Navigation) {
                 let subsection = crate::list::Subsection {
                     link: l.href.clone(),
                     title: entry.title.to_string(),
@@ -52,5 +53,57 @@ impl<'a> From<&'a Item> for tui::text::Text<'a> {
             Item::Previous(_) => "🔼 ..".to_string().into(),
             Item::Subsection(subsection) => format!("📚 {}", subsection.title).into(),
         }
+    }
+}
+
+struct Type {
+    _mime_type: String,
+    kind: Option<Kind>,
+}
+
+impl From<String> for Type {
+    fn from(ty: String) -> Self {
+        let mut mime_type = ty.clone();
+        let mut kind = None;
+
+        for option in ty.split(';') {
+            let parts = option.splitn(2, '=').collect::<Vec<_>>();
+
+            if parts.len() == 1 {
+                mime_type = parts[0].to_string();
+            } else {
+                use std::convert::TryInto;
+
+                match parts[0] {
+                    "kind" => kind = parts[1].try_into().ok(),
+                    _ => (),
+                }
+            }
+        }
+
+        Self {
+            _mime_type: mime_type,
+            kind,
+        }
+    }
+}
+
+#[derive(Eq, PartialEq)]
+enum Kind {
+    Acquisition,
+    Navigation,
+}
+
+impl std::convert::TryFrom<&str> for Kind {
+    type Error = ();
+
+    fn try_from(kind: &str) -> Result<Self, Self::Error> {
+        let k = match kind {
+            "acquisition" => Self::Acquisition,
+            "navigation" => Self::Navigation,
+            _ => return Err(()),
+        };
+
+        Ok(k)
     }
 }
