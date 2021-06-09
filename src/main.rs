@@ -54,7 +54,11 @@ fn main() -> Result {
     lazy_static::lazy_static! {
         static ref LOGGER: Logger = Logger::new();
     };
-    log::set_max_level(log::LevelFilter::Trace);
+    if cfg!(debug_assert) {
+        log::set_max_level(log::LevelFilter::Trace);
+    } else {
+        log::set_max_level(log::LevelFilter::Warn);
+    }
     log::set_logger(&*LOGGER).unwrap();
 
     let opt = Opt::parse();
