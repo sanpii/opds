@@ -63,7 +63,7 @@ fn main() -> Result {
     let mut state = State::new();
     state.ariane.push(Subsection {
         title: "#".to_string(),
-        link: opds.root_url(),
+        link: opt.url,
     });
 
     let events = Events::new();

@@ -19,11 +19,7 @@ impl Opds {
     }
 
     pub fn root(&mut self) {
-        self.send(&self.root_url());
-    }
-
-    pub fn root_url(&self) -> String {
-        self.url.path().to_string()
+        self.send(&self.url.path().to_string());
     }
 
     pub fn send(&mut self, path: &str) {
@@ -35,7 +31,11 @@ impl Opds {
             _ => unreachable!(),
         };
 
-        let url = format!("{}://{}:{}{}", origin.0, origin.1, origin.2, path);
+        let url = if path.starts_with("http://") || path.starts_with("https://") {
+            path.to_string()
+        } else {
+            format!("{}://{}:{}{}", origin.0, origin.1, origin.2, path)
+        };
         let username = self.username.clone();
         let password = self.password.clone();
 
