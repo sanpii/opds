@@ -72,8 +72,6 @@ impl From<String> for Type {
             if parts.len() == 1 {
                 mime_type = parts[0].to_string();
             } else {
-                use std::convert::TryInto;
-
                 match parts[0] {
                     "kind" => kind = parts[1].try_into().ok(),
                     _ => (),
@@ -94,7 +92,7 @@ enum Kind {
     Navigation,
 }
 
-impl std::convert::TryFrom<&str> for Kind {
+impl TryFrom<&str> for Kind {
     type Error = ();
 
     fn try_from(kind: &str) -> Result<Self, Self::Error> {

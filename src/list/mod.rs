@@ -79,8 +79,6 @@ impl List {
 
 impl From<atom_syndication::Feed> for List {
     fn from(feed: atom_syndication::Feed) -> Self {
-        use std::convert::TryFrom;
-
         let mut items = feed.entries.iter()
             .filter_map(|x| Item::try_from(x).ok())
             .collect::<Vec<_>>();
