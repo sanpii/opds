@@ -13,12 +13,10 @@ impl Events {
 
             let stdin = std::io::stdin();
 
-            for evt in stdin.keys() {
-                if let Ok(key) = evt {
-                    if let Err(err) = tx.send(key) {
-                        eprintln!("{}", err);
-                        return;
-                    }
+            for key in stdin.keys().flatten() {
+                if let Err(err) = tx.send(key) {
+                    eprintln!("{}", err);
+                    return;
                 }
             }
         });

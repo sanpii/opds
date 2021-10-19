@@ -169,7 +169,7 @@ fn main() -> Result {
                         Item::Book(_) => state.book = state.list.nth(),
                         Item::Previous(link) => {
                             state.ariane.pop();
-                            opds.send(&link);
+                            opds.send(link);
                         }
                         Item::Subsection(subsection) => {
                             state.ariane.push(subsection.clone());

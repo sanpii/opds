@@ -14,7 +14,7 @@ impl<'a> super::Widget<'a, tui::widgets::Table<'a>> for Details {
 
         let mut rows = vec![
             tui::widgets::Row::new(vec!["title:", &book.title.value]),
-            tui::widgets::Row::new(vec!["summary:", &book.summary.as_deref().unwrap_or("-")]),
+            tui::widgets::Row::new(vec!["summary:", book.summary.as_deref().unwrap_or("-")]),
         ];
 
         rows.push(tui::widgets::Row::new(vec!["authors:"]));

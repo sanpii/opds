@@ -41,7 +41,7 @@ impl From<&atom_syndication::Entry> for Item {
             }
         }
 
-        return Self::Book(entry.into());
+        Self::Book(entry.into())
     }
 
 }
@@ -71,11 +71,8 @@ impl From<String> for Type {
 
             if parts.len() == 1 {
                 mime_type = parts[0].to_string();
-            } else {
-                match parts[0] {
-                    "kind" => kind = parts[1].try_into().ok(),
-                    _ => (),
-                }
+            } else if parts[0] == "kind" {
+                kind = parts[1].try_into().ok();
             }
         }
 
