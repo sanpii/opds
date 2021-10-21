@@ -11,9 +11,9 @@ use list::*;
 use logger::*;
 use opds::*;
 
-use clap::Clap;
+use clap::Parser;
 
-#[derive(Clap)]
+#[derive(Parser)]
 struct Opt {
     #[clap(long)]
     /// basic auth username
