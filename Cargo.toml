@@ -11,7 +11,6 @@ attohttpc = "0.18"
 lazy_static = "1.4"
 termion = "1.5"
 thiserror = "1.0"
-tui = "0.16"
 url = "2.2"
 
 [dependencies.clap]
@@ -21,3 +20,7 @@ features = ["derive"]
 [dependencies.log]
 version = "0.4"
 features = ["std"]
+
+[dependencies.tui]
+version = "0.17"
+features = ["termion"]
