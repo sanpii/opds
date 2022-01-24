@@ -11,7 +11,7 @@ attohttpc = "0.18"
 lazy_static = "1.4"
 termion = "1.5"
 thiserror = "1.0"
-tui = "0.16"
+tui = "0.17"
 url = "2.2"
 
 [dependencies.clap]
