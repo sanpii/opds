@@ -7,11 +7,14 @@ license = "MIT"
 
 [dependencies]
 atom_syndication = "0.11"
-attohttpc = "0.20"
 lazy_static = "1.4"
 termion = "1.5"
 thiserror = "1.0"
 url = "2.2"
+
+[dependencies.attohttpc]
+version = "0.22"
+features = ["basic-auth"]
 
 [dependencies.clap]
 version = "3.0"
