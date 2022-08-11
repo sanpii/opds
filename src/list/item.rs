@@ -30,7 +30,7 @@ impl Eq for Item {
 impl From<&atom_syndication::Entry> for Item {
     fn from(entry: &atom_syndication::Entry) -> Self {
         for l in &entry.links {
-            let kind = l.mime_type.clone().map(Type::from).map(|x| x.kind).flatten();
+            let kind = l.mime_type.clone().map(Type::from).and_then(|x| x.kind);
             if kind == Some(Kind::Navigation) {
                 let subsection = crate::list::Subsection {
                     link: l.href.clone(),
