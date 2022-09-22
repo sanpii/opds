@@ -15,10 +15,10 @@ use clap::Parser;
 
 #[derive(Parser)]
 struct Opt {
-    #[clap(long)]
+    #[arg(long)]
     /// basic auth username
     username: Option<String>,
-    #[clap(long)]
+    #[arg(long)]
     /// basic auth password
     password: Option<String>,
     /// OPDS root URL
