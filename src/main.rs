@@ -51,15 +51,15 @@ fn main() -> Result {
     use termion::raw::IntoRawMode;
     use widgets::Widget;
 
-    lazy_static::lazy_static! {
-        static ref LOGGER: Logger = Logger::new();
-    };
+    static LOGGER: std::sync::OnceLock<Logger> = std::sync::OnceLock::new();
+    let logger = LOGGER.get_or_init(Logger::new);
+
     if cfg!(debug_assert) {
         log::set_max_level(log::LevelFilter::Trace);
     } else {
         log::set_max_level(log::LevelFilter::Warn);
     }
-    log::set_logger(&*LOGGER).unwrap();
+    log::set_logger(logger).unwrap();
 
     let opt = Opt::parse();
     let mut opds = Opds::new(&opt.url, opt.username, opt.password);
@@ -86,7 +86,7 @@ fn main() -> Result {
             }
         }
 
-        state.logs = LOGGER.messages();
+        state.logs = logger.messages();
 
         terminal.draw(|f| {
             let layout = tui::layout::Layout::default()
