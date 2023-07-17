@@ -49,9 +49,9 @@ impl From<&atom_syndication::Entry> for Item {
 impl<'a> From<&'a Item> for tui::text::Text<'a> {
     fn from(item: &'a Item) -> Self {
         match item {
-            Item::Book(book) => format!("📕 {}", book.title.to_string()).into(),
-            Item::Previous(_) => "🔼 ..".to_string().into(),
-            Item::Subsection(subsection) => format!("📚 {}", subsection.title).into(),
+            Item::Book(book) => format!(" {}", book.title.to_string()).into(),
+            Item::Previous(_) => "󰛃 ..".to_string().into(),
+            Item::Subsection(subsection) => format!("󱉟 {}", subsection.title).into(),
         }
     }
 }
