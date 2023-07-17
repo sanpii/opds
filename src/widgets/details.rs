@@ -33,7 +33,7 @@ impl<'a> super::Widget<'a, tui::widgets::Table<'a>> for Details {
         }
 
         tui::widgets::Table::new(rows)
-            .widths(&[tui::layout::Constraint::Min(11), tui::layout::Constraint::Min(0)])
+            .widths(&[tui::layout::Constraint::Min(11), tui::layout::Constraint::Percentage(100)])
             .block(block)
     }
 }

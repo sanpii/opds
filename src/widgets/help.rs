@@ -17,7 +17,7 @@ impl<'a> super::Widget<'a, tui::widgets::Table<'a>> for Help {
             tui::widgets::Row::new(vec!["q", "Quit"]),
             tui::widgets::Row::new(vec!["h", "Show this help"]),
         ])
-            .widths(&[tui::layout::Constraint::Min(5), tui::layout::Constraint::Min(0)])
+            .widths(&[tui::layout::Constraint::Min(5), tui::layout::Constraint::Percentage(100)])
             .block(block)
     }
 }

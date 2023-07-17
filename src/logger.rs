@@ -15,7 +15,7 @@ impl<'a> From<&'a Message> for tui::widgets::ListItem<'a> {
             log::Level::Debug => Style::default().fg(Color::Blue),
             log::Level::Trace => Style::default().fg(Color::Gray),
         };
-        let span = tui::text::Spans::from(vec![
+        let span = tui::text::Line::from(vec![
             tui::text::Span::styled(format!("{:<9}", message.level), s),
             tui::text::Span::raw(" "),
             tui::text::Span::raw(message.message.as_str()),
