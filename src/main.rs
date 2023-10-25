@@ -49,6 +49,7 @@ impl State {
 
 fn main() -> Result {
     use termion::raw::IntoRawMode;
+    use termion::screen::IntoAlternateScreen;
     use widgets::Widget;
 
     static LOGGER: std::sync::OnceLock<Logger> = std::sync::OnceLock::new();
@@ -72,7 +73,7 @@ fn main() -> Result {
 
     let events = Events::new();
     let stdout = std::io::stdout().into_raw_mode()?;
-    let screen = termion::screen::AlternateScreen::from(stdout);
+    let screen = stdout.into_alternate_screen()?;
     let backend = tui::backend::TermionBackend::new(screen);
     let mut terminal = tui::Terminal::new(backend)?;
 
