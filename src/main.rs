@@ -54,7 +54,7 @@ fn main() -> Result {
     static LOGGER: std::sync::OnceLock<Logger> = std::sync::OnceLock::new();
     let logger = LOGGER.get_or_init(Logger::new);
 
-    if cfg!(debug_assert) {
+    if cfg!(debug_assertions) {
         log::set_max_level(log::LevelFilter::Trace);
     } else {
         log::set_max_level(log::LevelFilter::Warn);
