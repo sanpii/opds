@@ -24,8 +24,7 @@ impl Ord for Item {
     }
 }
 
-impl Eq for Item {
-}
+impl Eq for Item {}
 
 impl From<&atom_syndication::Entry> for Item {
     fn from(entry: &atom_syndication::Entry) -> Self {
@@ -43,7 +42,6 @@ impl From<&atom_syndication::Entry> for Item {
 
         Self::Book(entry.into())
     }
-
 }
 
 impl<'a> From<&'a Item> for tui::text::Text<'a> {

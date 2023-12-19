@@ -68,8 +68,7 @@ impl List {
     }
 
     pub fn selected(&self) -> Option<&Item> {
-        self.state.selected()
-            .map(|x| &self.items[x])
+        self.state.selected().map(|x| &self.items[x])
     }
 
     pub fn nth(&self) -> Option<usize> {
@@ -79,7 +78,9 @@ impl List {
 
 impl From<atom_syndication::Feed> for List {
     fn from(feed: atom_syndication::Feed) -> Self {
-        let mut items = feed.entries.iter()
+        let mut items = feed
+            .entries
+            .iter()
             .filter_map(|x| Item::try_from(x).ok())
             .collect::<Vec<_>>();
         items.sort();

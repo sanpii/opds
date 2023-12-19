@@ -83,7 +83,10 @@ fn main() -> Result {
 
             if state.ariane.len() >= 2 {
                 let prev = &state.ariane[state.ariane.len() - 2];
-                state.list.items.insert(0, list::Item::Previous(prev.link.clone()));
+                state
+                    .list
+                    .items
+                    .insert(0, list::Item::Previous(prev.link.clone()));
             }
         }
 
@@ -93,17 +96,27 @@ fn main() -> Result {
             let layout = tui::layout::Layout::default()
                 .margin(1)
                 .direction(tui::layout::Direction::Vertical)
-                .constraints([
-                    tui::layout::Constraint::Length(3),
-                    tui::layout::Constraint::Min(0),
-                ].as_ref())
+                .constraints(
+                    [
+                        tui::layout::Constraint::Length(3),
+                        tui::layout::Constraint::Min(0),
+                    ]
+                    .as_ref(),
+                )
                 .split(f.size());
 
             let block = tui::widgets::Block::default()
                 .border_type(tui::widgets::BorderType::Rounded)
                 .borders(tui::widgets::Borders::ALL);
-            let url = tui::widgets::Paragraph::new(state.ariane.iter().map(|x| x.title.clone()).collect::<Vec<_>>().join("/"))
-                .block(block);
+            let url = tui::widgets::Paragraph::new(
+                state
+                    .ariane
+                    .iter()
+                    .map(|x| x.title.clone())
+                    .collect::<Vec<_>>()
+                    .join("/"),
+            )
+            .block(block);
             f.render_widget(url, layout[0]);
 
             let mut npanes = 1;
@@ -117,7 +130,8 @@ fn main() -> Result {
                 npanes += 1;
             }
 
-            let constrains = vec![tui::layout::Constraint::Percentage(100 / npanes); npanes as usize];
+            let constrains =
+                vec![tui::layout::Constraint::Percentage(100 / npanes); npanes as usize];
             let main = tui::layout::Layout::default()
                 .direction(tui::layout::Direction::Horizontal)
                 .constraints(constrains)
@@ -132,8 +146,7 @@ fn main() -> Result {
             let widgets = tui::widgets::List::new(&state.list.items)
                 .block(block)
                 .highlight_style(
-                    tui::style::Style::default()
-                        .add_modifier(tui::style::Modifier::BOLD),
+                    tui::style::Style::default().add_modifier(tui::style::Modifier::BOLD),
                 )
                 .highlight_symbol("> ");
             f.render_stateful_widget(widgets, main[area], &mut state.list.state);
@@ -161,16 +174,18 @@ fn main() -> Result {
                 Char('d') => state.show_debug = !state.show_debug,
                 Char('h') => state.show_help = !state.show_help,
                 Char('q') => break,
-                Char('\n') => if let Some(item) = state.list.selected() {
-                    match item {
-                        Item::Book(_) => state.book = state.list.nth(),
-                        Item::Previous(link) => {
-                            state.ariane.pop();
-                            opds.send(link);
-                        }
-                        Item::Subsection(subsection) => {
-                            state.ariane.push(subsection.clone());
-                            opds.send(&subsection.link);
+                Char('\n') => {
+                    if let Some(item) = state.list.selected() {
+                        match item {
+                            Item::Book(_) => state.book = state.list.nth(),
+                            Item::Previous(link) => {
+                                state.ariane.pop();
+                                opds.send(link);
+                            }
+                            Item::Subsection(subsection) => {
+                                state.ariane.push(subsection.clone());
+                                opds.send(&subsection.link);
+                            }
                         }
                     }
                 }

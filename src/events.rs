@@ -21,9 +21,7 @@ impl Events {
             }
         });
 
-        Self {
-            rx,
-        }
+        Self { rx }
     }
 
     pub fn next(&self) -> Result<Key, std::sync::mpsc::RecvError> {

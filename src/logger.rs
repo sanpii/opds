@@ -44,10 +44,7 @@ impl Logger {
     }
 
     pub fn messages(&self) -> Vec<Message> {
-        self.messages
-            .read()
-            .unwrap()
-            .clone()
+        self.messages.read().unwrap().clone()
     }
 }
 
@@ -57,12 +54,8 @@ impl log::Log for Logger {
     }
 
     fn log(&self, record: &log::Record) {
-        self.messages
-            .write()
-            .unwrap()
-            .push(record.into());
+        self.messages.write().unwrap().push(record.into());
     }
 
-    fn flush(&self) {
-    }
+    fn flush(&self) {}
 }
