@@ -6,11 +6,7 @@ impl<'a> super::Widget<'a, tui::widgets::List<'a>> for Logs {
             .border_type(tui::widgets::BorderType::Rounded)
             .borders(tui::widgets::Borders::ALL)
             .title("Logs");
-        let items = state.logs.iter()
-            .map(tui::widgets::ListItem::from)
-            .collect::<Vec<_>>();
 
-        tui::widgets::List::new(items)
-            .block(block)
+        tui::widgets::List::new(&state.logs).block(block)
     }
 }

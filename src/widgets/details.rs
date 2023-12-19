@@ -32,9 +32,13 @@ impl<'a> super::Widget<'a, tui::widgets::Table<'a>> for Details {
             rows.push(tui::widgets::Row::new(vec!["", &link.href]));
         }
 
-        tui::widgets::Table::new(rows)
-            .widths(&[tui::layout::Constraint::Min(11), tui::layout::Constraint::Percentage(100)])
-            .block(block)
+        tui::widgets::Table::new(
+            rows,
+            [
+                tui::layout::Constraint::Min(11),
+                tui::layout::Constraint::Percentage(100),
+            ],
+        )
+        .block(block)
     }
 }
-

@@ -129,11 +129,7 @@ fn main() -> Result {
                 .border_type(tui::widgets::BorderType::Rounded)
                 .borders(tui::widgets::Borders::ALL);
 
-            let items = state.list.items.iter()
-                .map(tui::widgets::ListItem::new)
-                .collect::<Vec<_>>();
-
-            let widgets = tui::widgets::List::new(items)
+            let widgets = tui::widgets::List::new(&state.list.items)
                 .block(block)
                 .highlight_style(
                     tui::style::Style::default()
