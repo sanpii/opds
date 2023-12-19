@@ -15,7 +15,7 @@ impl Events {
 
             for key in stdin.keys().flatten() {
                 if let Err(err) = tx.send(key) {
-                    eprintln!("{}", err);
+                    eprintln!("{err}");
                     return;
                 }
             }

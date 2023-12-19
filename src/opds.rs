@@ -7,8 +7,8 @@ pub struct Opds {
 
 impl Opds {
     pub fn new(url: &str, username: Option<String>, password: Option<String>) -> Self {
-        log::debug!("{}", url);
-        log::debug!("username={:?} password={:?}", username, password);
+        log::debug!("{url}");
+        log::debug!("username={username:?} password={password:?}");
 
         Self {
             rx: None,
@@ -23,7 +23,7 @@ impl Opds {
     }
 
     pub fn send(&mut self, path: &str) {
-        log::debug!("Fetching {}", path);
+        log::debug!("Fetching {path}");
 
         let (tx, rx) = std::sync::mpsc::channel();
         let origin = match self.url.origin() {
@@ -42,7 +42,7 @@ impl Opds {
         std::thread::spawn(move || {
             match Self::try_send(&url, username.as_deref(), password.as_deref()) {
                 Ok(feed) => tx.send(feed).unwrap(),
-                Err(err) => log::error!("{}", err),
+                Err(err) => log::error!("{err}"),
             }
         });
 
