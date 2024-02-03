@@ -2,9 +2,8 @@ pub struct Help;
 
 impl<'a> super::Widget<'a, tui::widgets::Table<'a>> for Help {
     fn draw(_: &'a crate::State) -> tui::widgets::Table<'a> {
-        let block = tui::widgets::Block::default()
+        let block = tui::widgets::Block::bordered()
             .border_type(tui::widgets::BorderType::Rounded)
-            .borders(tui::widgets::Borders::ALL)
             .title("Help");
 
         tui::widgets::Table::new(

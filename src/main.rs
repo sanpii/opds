@@ -105,9 +105,8 @@ fn main() -> Result {
                 )
                 .split(f.size());
 
-            let block = tui::widgets::Block::default()
-                .border_type(tui::widgets::BorderType::Rounded)
-                .borders(tui::widgets::Borders::ALL);
+            let block = tui::widgets::Block::bordered()
+                .border_type(tui::widgets::BorderType::Rounded);
             let url = tui::widgets::Paragraph::new(
                 state
                     .ariane
@@ -139,9 +138,8 @@ fn main() -> Result {
 
             let mut area = 0;
 
-            let block = tui::widgets::Block::default()
-                .border_type(tui::widgets::BorderType::Rounded)
-                .borders(tui::widgets::Borders::ALL);
+            let block = tui::widgets::Block::bordered()
+                .border_type(tui::widgets::BorderType::Rounded);
 
             let widgets = tui::widgets::List::new(&state.list.items)
                 .block(block)

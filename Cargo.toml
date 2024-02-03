@@ -26,5 +26,5 @@ features = ["std"]
 
 [dependencies.tui]
 package = "ratatui"
-version = "0.25"
+version = "0.26"
 features = ["termion"]

@@ -2,9 +2,8 @@ pub struct Details;
 
 impl<'a> super::Widget<'a, tui::widgets::Table<'a>> for Details {
     fn draw(state: &'a crate::State) -> tui::widgets::Table<'a> {
-        let block = tui::widgets::Block::default()
+        let block = tui::widgets::Block::bordered()
             .border_type(tui::widgets::BorderType::Rounded)
-            .borders(tui::widgets::Borders::ALL)
             .title("Details");
 
         let book = match state.list.selected() {
