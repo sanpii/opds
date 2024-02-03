@@ -13,7 +13,7 @@ thiserror = "1.0"
 url = "2.2"
 
 [dependencies.attohttpc]
-version = "0.26"
+version = "0.27"
 features = ["basic-auth"]
 
 [dependencies.clap]
