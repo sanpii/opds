@@ -8,7 +8,6 @@ rust-version = "1.70"
 
 [dependencies]
 atom_syndication = "0.12"
-termion = "4.0"
 thiserror = "1.0"
 url = "2.2"
 
@@ -26,5 +25,5 @@ features = ["std"]
 
 [dependencies.tui]
 package = "ratatui"
-version = "0.26"
+version = "0.27"
 features = ["termion"]

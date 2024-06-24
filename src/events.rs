@@ -1,4 +1,4 @@
-use termion::event::Key;
+use tui::termion::event::Key;
 
 pub struct Events {
     rx: std::sync::mpsc::Receiver<Key>,
@@ -9,7 +9,7 @@ impl Events {
         let (tx, rx) = std::sync::mpsc::channel();
 
         std::thread::spawn(move || {
-            use termion::input::TermRead;
+            use tui::termion::input::TermRead;
 
             let stdin = std::io::stdin();
 

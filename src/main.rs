@@ -48,8 +48,8 @@ impl State {
 }
 
 fn main() -> Result {
-    use termion::raw::IntoRawMode;
-    use termion::screen::IntoAlternateScreen;
+    use tui::termion::raw::IntoRawMode;
+    use tui::termion::screen::IntoAlternateScreen;
     use widgets::Widget;
 
     static LOGGER: std::sync::OnceLock<Logger> = std::sync::OnceLock::new();
@@ -166,7 +166,7 @@ fn main() -> Result {
         })?;
 
         if let Ok(key) = events.next() {
-            use termion::event::Key::*;
+            use tui::termion::event::Key::*;
 
             match key {
                 Char('d') => state.show_debug = !state.show_debug,
