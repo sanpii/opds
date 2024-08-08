@@ -103,7 +103,7 @@ fn main() -> Result {
                     ]
                     .as_ref(),
                 )
-                .split(f.size());
+                .split(f.area());
 
             let block = tui::widgets::Block::bordered()
                 .border_type(tui::widgets::BorderType::Rounded);
