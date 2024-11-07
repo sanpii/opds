@@ -143,6 +143,7 @@ fn main() -> Result {
 
             let widgets = tui::widgets::List::new(&state.list.items)
                 .block(block)
+                .scroll_padding(1)
                 .highlight_style(
                     tui::style::Style::default().add_modifier(tui::style::Modifier::BOLD),
                 )
