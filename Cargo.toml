@@ -8,6 +8,7 @@ rust-version = "1.70"
 
 [dependencies]
 atom_syndication = "0.12"
+ratatui_simple_logger = "0.1"
 thiserror = "2.0"
 url = "2.2"
 

@@ -1,14 +1,12 @@
 mod errors;
 mod events;
 mod list;
-mod logger;
 mod opds;
 mod widgets;
 
 use errors::*;
 use events::*;
 use list::*;
-use logger::*;
 use opds::*;
 
 use clap::Parser;
@@ -31,7 +29,6 @@ pub struct State {
     show_help: bool,
     list: List,
     book: Option<usize>,
-    logs: Vec<logger::Message>,
 }
 
 impl State {
@@ -42,7 +39,6 @@ impl State {
             show_help: false,
             list: List::new(),
             book: None,
-            logs: Vec::new(),
         }
     }
 }
@@ -52,15 +48,7 @@ fn main() -> Result {
     use tui::termion::screen::IntoAlternateScreen;
     use widgets::Widget;
 
-    static LOGGER: std::sync::OnceLock<Logger> = std::sync::OnceLock::new();
-    let logger = LOGGER.get_or_init(Logger::new);
-
-    if cfg!(debug_assertions) {
-        log::set_max_level(log::LevelFilter::Trace);
-    } else {
-        log::set_max_level(log::LevelFilter::Warn);
-    }
-    log::set_logger(logger).unwrap();
+    ratatui_simple_logger::init().ok();
 
     let opt = Opt::parse();
     let mut opds = Opds::new(&opt.url, opt.username, opt.password);
@@ -89,8 +77,6 @@ fn main() -> Result {
                     .insert(0, list::Item::Previous(prev.link.clone()));
             }
         }
-
-        state.logs = logger.messages();
 
         terminal.draw(|f| {
             let layout = tui::layout::Layout::default()
@@ -157,7 +143,7 @@ fn main() -> Result {
             }
 
             if state.show_debug {
-                f.render_widget(widgets::Logs::draw(&state), main[area]);
+                f.render_widget(ratatui_simple_logger::Widget::new(), main[area]);
                 area += 1;
             }
 
